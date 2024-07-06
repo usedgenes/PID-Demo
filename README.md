@@ -29,3 +29,22 @@ To use FTC Dashboard:
     Go to http://192.168.43.1:8080/dash
     Select Enable/Disable Dashboard in the TeleOp list in the Driver Station App
     Select the OpMode you want in the OpMode list towards the left of the website
+
+An image of an example setup for the motor is located in this repository, though there are many 
+ways you can secure a motor in place.
+
+Tuning the PID controller:
+    We will be using the Ziegler-Nichols method for classic PID:
+    1. Set the I and D coefficients to zero
+    2. Steadily increase the P coefficient until the motor output has consistent and stable 
+oscillations, and we call this Pmax. The oscillation period is called T.
+    3. The P coefficient equals 0.6*Pmax
+    4. The I coefficient equals 1.2*Pmax/T
+    5. The D coefficient equals 0.075*Pmax*T
+
+    For more manual tuning:
+    1. Set I and D coefficients to zero
+    2. Increase the P coefficient until the motor output has consistent and stable oscillations
+    3. Increase the D coefficient until there is no overshoot
+    4. If the motor is unable to reach the desired position, increase the I coefficient until it 
+does.
