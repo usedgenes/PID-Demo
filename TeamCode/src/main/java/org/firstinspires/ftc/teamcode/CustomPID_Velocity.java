@@ -19,7 +19,8 @@ public class CustomPID_Velocity extends LinearOpMode {
   public static double Ki;
   public static double Kd;
   public static int targetVelocity = 0;
-  public double previousError;
+  public double previousError = 0;
+  public double previousTime = 0;
   public double p;
   public double i;
   public double d;
@@ -37,24 +38,24 @@ public class CustomPID_Velocity extends LinearOpMode {
     waitForStart();
     timer.reset();
       while(opModeIsActive()) {
-        double power = PIDControl(timer.time(), motor.getVelocity());
+        double power = PIDControl(motor.getVelocity());
         motor.setPower(power);
         dashboardTelemetry.addData("Velocity", motor.getVelocity());
         dashboardTelemetry.update();
-        timer.reset();
-
       }
 
   }
 
-  public double PIDControl(double currentTime, double currentVelocity) {
+  public double PIDControl(double currentVelocity) {
+    double currentTime = timer.milliseconds();
     double currentError = targetVelocity - currentVelocity;
-    p = Kp * currentError;
-    i = i + Ki * (currentError * currentTime);
-    d = Kd * (currentError - previousError) / currentTime;
+    p = Kp*currentError;
+    i += Ki*(currentError * (currentTime-previousTime));
+    d = Kd * (currentError - previousError) / (currentTime-previousTime);
+    previousTime = currentTime;
     previousError = currentError;
     dashboardTelemetry.addData("Error", currentError);
-    dashboardTelemetry.addData("Time", currentTime);
+    dashboardTelemetry.addData("Time", currentTime - previousTime);
     return p+i+d;
   }
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.icu.text.Transliterator;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -26,14 +28,17 @@ public class BuiltInPID_Position extends LinearOpMode {
         motor = hardwareMap.get(DcMotorEx.class, "motor");
         motor.setDirection(DcMotor.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setTargetPosition(POSITION);
         PIDFCoefficients pidfCoefficients = motor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
         p = pidfCoefficients.p;
         waitForStart();
 
         while (opModeIsActive()) {
             motor.setPositionPIDFCoefficients(p);
-            motor.setTargetPosition(POSITION);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition(POSITION);
+            motor.setMotorEnable();
             dashboardTelemetry.addData("Encoder value", motor.getCurrentPosition());
             dashboardTelemetry.addData("Velocity", motor.getVelocity());
             dashboardTelemetry.update();

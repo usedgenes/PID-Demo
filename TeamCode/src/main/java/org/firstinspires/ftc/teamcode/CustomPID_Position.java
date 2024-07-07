@@ -20,7 +20,8 @@ public class CustomPID_Position extends LinearOpMode {
   public static double Ki;
   public static double Kd;
   public static int targetPosition = 0;
-  public double previousError;
+  public double previousError = 0;
+  public double previousTime = 0;
   public double p;
   public double i;
   public double d;
@@ -38,25 +39,25 @@ public class CustomPID_Position extends LinearOpMode {
 
     waitForStart();
       while(opModeIsActive()) {
-        while(motor.getCurrentPosition() != targetPosition) {
-          double power = PIDControl(timer.time(), motor.getVelocity());
+          double power = PIDControl(motor.getCurrentPosition());
           motor.setPower(power);
           dashboardTelemetry.addData("Velocity", motor.getVelocity());
           dashboardTelemetry.update();
           timer.reset();
-        }
       }
 
   }
 
-  public double PIDControl(double currentTime, double currentVelocity) {
-    double currentError = targetPosition - currentVelocity;
+  public double PIDControl(double currentPosition) {
+    double currentTime = timer.milliseconds();
+    double currentError = targetPosition - currentPosition;
     p = Kp * currentError;
-    i = i + Ki * (currentError * currentTime);
-    d = Kd * (currentError - previousError) /currentTime;
+    i += Ki * (currentError * (currentTime - previousTime));
+    d = Kd * (currentError - previousError) / (currentTime - previousTime);
+    previousTime = currentTime;
     previousError = currentError;
     dashboardTelemetry.addData("Error", currentError);
-    dashboardTelemetry.addData("Time", currentTime);
-    return p+i+d;
+    dashboardTelemetry.addData("Time", currentTime - previousTime);
+    return p + i + d;
   }
 }
