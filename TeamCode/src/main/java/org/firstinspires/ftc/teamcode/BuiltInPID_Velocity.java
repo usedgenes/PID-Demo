@@ -32,20 +32,20 @@ public class BuiltInPID_Velocity extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        PIDFCoefficients pidCoefficients = motor.getPIDFCoefficients(motor.getMode());
-        Kp = pidCoefficients.p;
-        Ki = pidCoefficients.i;
-        Kd = pidCoefficients.d;
-        Kf = pidCoefficients.f;
-
+        PIDFCoefficients pidfCoefficients =
+                motor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        Kp = pidfCoefficients.p;
+        Ki = pidfCoefficients.i;
+        Kd = pidfCoefficients.d;
+        Kf = pidfCoefficients.f;
         waitForStart();
 
         while (opModeIsActive()) {
             motor.setVelocity(VELOCITY);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(Kp, Ki,
-                    Kd, Kf));
+            motor.setVelocityPIDFCoefficients(Kp, Ki, Kd, Kf);
             dashboardTelemetry.addData("Encoder value", motor.getCurrentPosition());
+            dashboardTelemetry.addData("Velocity", motor.getVelocity());
             dashboardTelemetry.update();
         }
     }

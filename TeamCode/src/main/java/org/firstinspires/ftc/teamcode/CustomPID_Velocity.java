@@ -15,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class CustomPID_Velocity extends LinearOpMode {
   DcMotorEx motor = null;
 
-  public static double integralSum = 0;
   public static double Kp;
   public static double Ki;
   public static double Kd;
@@ -54,9 +53,8 @@ public class CustomPID_Velocity extends LinearOpMode {
     i = i + Ki * (currentError * currentTime);
     d = Kd * (currentError - previousError) / currentTime;
     previousError = currentError;
-    telemetry.addData("P", p);
-    telemetry.addData("I", i);
-    telemetry.addData("D", d);
+    dashboardTelemetry.addData("Error", currentError);
+    dashboardTelemetry.addData("Time", currentTime);
     return p+i+d;
   }
 }

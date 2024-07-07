@@ -55,9 +55,8 @@ public class CustomPID_Position extends LinearOpMode {
     i = i + Ki * (currentError * currentTime);
     d = Kd * (currentError - previousError) /currentTime;
     previousError = currentError;
-    telemetry.addData("P", p);
-    telemetry.addData("I", i);
-    telemetry.addData("D", d);
+    dashboardTelemetry.addData("Error", currentError);
+    dashboardTelemetry.addData("Time", currentTime);
     return p+i+d;
   }
 }

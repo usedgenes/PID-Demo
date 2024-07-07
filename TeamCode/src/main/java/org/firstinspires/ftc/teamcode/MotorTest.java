@@ -29,7 +29,7 @@ public class MotorTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             motor.setPower(MOTOR_POWER);
-
+            dashboardTelemetry.addData("Encoder Position", motor.getCurrentPosition());
             dashboardTelemetry.addData("Velocity", motor.getVelocity()  );
             dashboardTelemetry.update();
         }
