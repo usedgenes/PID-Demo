@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 //Simple program to test a motor
 // 0 = stop, 1 = full power, negative = reverse direction
@@ -16,7 +20,10 @@ public class BuiltInPID_Velocity extends LinearOpMode {
     public static double Kp;
     public static double Ki;
     public static double Kd;
+    public static double Kf;
     DcMotorEx motor = null;
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    Telemetry dashboardTelemetry = dashboard.getTelemetry();
     public void runOpMode() {
 
         motor = hardwareMap.get(DcMotorEx.class, "motor");
@@ -25,19 +32,21 @@ public class BuiltInPID_Velocity extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        PIDCoefficients pidCoefficients = motor.getPIDCoefficients(motor.getMode());
+        PIDFCoefficients pidCoefficients = motor.getPIDFCoefficients(motor.getMode());
         Kp = pidCoefficients.p;
         Ki = pidCoefficients.i;
         Kd = pidCoefficients.d;
+        Kf = pidCoefficients.f;
 
         waitForStart();
 
         while (opModeIsActive()) {
             motor.setVelocity(VELOCITY);
-            motor.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDCoefficients(Kp, Ki,
-                    Kd));
-            telemetry.addData("Encoder value", motor.getCurrentPosition());
-            telemetry.update();
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(Kp, Ki,
+                    Kd, Kf));
+            dashboardTelemetry.addData("Encoder value", motor.getCurrentPosition());
+            dashboardTelemetry.update();
         }
     }
 }

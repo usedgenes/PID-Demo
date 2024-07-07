@@ -23,8 +23,6 @@ public class BuiltInPID_Position extends LinearOpMode {
         motor = hardwareMap.get(DcMotorEx.class, "motor");
 
         motor.setDirection(DcMotor.Direction.FORWARD);
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         PIDCoefficients pidCoefficients = motor.getPIDCoefficients(motor.getMode());
         Kp = pidCoefficients.p;
@@ -34,6 +32,7 @@ public class BuiltInPID_Position extends LinearOpMode {
 
         while (opModeIsActive()) {
             motor.setTargetPosition(POSITION);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDCoefficients(Kp, Ki,
              Kd));
             telemetry.addData("Encoder value", motor.getCurrentPosition());

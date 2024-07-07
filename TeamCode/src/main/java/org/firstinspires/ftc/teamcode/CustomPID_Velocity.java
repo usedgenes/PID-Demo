@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,8 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Config
-@TeleOp(name="Custom PID", group="Linear OpMode")
+@TeleOp(name="Custom PID Velocity", group="Linear OpMode")
 public class CustomPID_Velocity extends LinearOpMode {
   DcMotorEx motor = null;
 
@@ -21,7 +24,8 @@ public class CustomPID_Velocity extends LinearOpMode {
   public double p;
   public double i;
   public double d;
-
+  FtcDashboard dashboard = FtcDashboard.getInstance();
+  Telemetry dashboardTelemetry = dashboard.getTelemetry();
   ElapsedTime timer = new ElapsedTime();
 
   @Override
@@ -36,8 +40,8 @@ public class CustomPID_Velocity extends LinearOpMode {
       while(opModeIsActive()) {
         double power = PIDControl(timer.time(), motor.getVelocity());
         motor.setPower(power);
-        telemetry.addData("Velocity", motor.getVelocity());
-        telemetry.update();
+        dashboardTelemetry.addData("Velocity", motor.getVelocity());
+        dashboardTelemetry.update();
         timer.reset();
 
       }
