@@ -44,3 +44,6 @@ Coefficients to get started for Custom PID Velocity:
 P - 0.0005
 I - 0.00001
 D - 0.001
+
+What tuning the PID using FTC Dashboard looks like:   
+![PID Tuning](https://github.com/usedgenes/PID-Demo/blob/main/Tuning/Screenshot%20(30).png)
